@@ -1,3 +1,6 @@
+# Other
+pipenv flask.txt
+
 # Logs
 logs
 *.log
