@@ -78,7 +78,7 @@ function display_houseData() {
             <div>
                 <p>${bill.name}</p>
                 <ul class="bill_roommates"></ul>
-            </div>`)
+            </div>`);
         }
 
         for ( var i = 0; i < house.bills.length; i++) {
@@ -92,8 +92,8 @@ function display_houseData() {
 // Roommate List Functions
 function add_roommate() {
     var num_roommates = $("#house_create_form #roommates_container").data("roommates") + 1;
-    $("#house_create_form #roommates_container").data("roommates", num_roommates)
-    $("#house_create_form #roommates_container").append(`<div id="roomm${num_roommates}_cont"><input type="text" id="roommate${num_roommates}" placeholder="Roommate ${num_roommates}"></div>`)
+    $("#house_create_form #roommates_container").data("roommates", num_roommates);
+    $("#house_create_form #roommates_container").append(`<div id="roomm${num_roommates}_cont"><input type="text" id="roommate${num_roommates}" placeholder="Roommate ${num_roommates}"></div>`);
 }
 
 function remove_roommate() {
@@ -129,10 +129,10 @@ $(function(){
 
     $("#add_roommate_button").click(function(){
         add_roommate();
-    });
+    })
     $("#remove_roommate_button").click(function(){
         remove_roommate();
-    });
+    })
 
     $("#house_create_form").submit(function(e) {
         e.preventDefault();
@@ -156,24 +156,24 @@ $(function(){
             add_house(houseData);
         }
         else {
-            alert("Creation Failed: No logged in User")
+            alert("Creation Failed: No logged in User");
             return;
         }
 
         display_userData();
         display_houseData();
         $("#house_create_form input").val("");
-    });
+    })
 
     $("#bill_create_form #h_uuid").change(function() {
-        var uuid = $("#bill_create_form #h_uuid").val()
+        var uuid = $("#bill_create_form #h_uuid").val();
         if (houseData[uuid]) {
             for (let i = 0; i < houseData[uuid].roommates.length; i++) {
                 var roommate_name = houseData[uuid].roommates[i];
-                $("#bill_create_form #roommates_container fieldset").append(`<input type="checkbox" name="roommate_select" value="${roommate_name}">${roommate_name}<br>`)
+                $("#bill_create_form #roommates_container fieldset").append(`<input type="checkbox" name="roommate_select" value="${roommate_name}">${roommate_name}<br>`);
             }
         }
-    });
+    })
 
     $("#bill_create_form").submit(function(e) {
         e.preventDefault();
@@ -194,6 +194,6 @@ $(function(){
         
         add_bill(uuid, billData);
         display_houseData();
-    });
-});
+    })
+})
 //
