@@ -1,6 +1,5 @@
 var userData = {};
 var houseData = {};
-var uuid = {};
 var loggedinuser = "";
 
 // UUID Generation
@@ -26,7 +25,6 @@ function add_user(user) {
     loggedinuser = user.uuid;
 
     userData[user.uuid] = user;
-    console.log(userData)
 }
 
 function display_userData() {
@@ -49,7 +47,10 @@ function display_userData() {
 // House Data Functions
 function add_house(house) {
     houseData[house.uuid] = house;
-    console.log(houseData);
+}
+
+function add_bill(uuid, billData) {
+    houseData[uuid].bills.push(billData);
 }
 
 function display_houseData() {
@@ -62,10 +63,28 @@ function display_houseData() {
         <p>Name: ${house.name}</p>
         <p> - ${house.roomates.length} Roomates - </p>
         <ul></ul>
-        </br></div>`);
+        </div>`);
 
         for ( var i = 0; i < house.roomates.length; i++) {
             $(`#${house.uuid} ul`).append(`<li>${house.roomates[i]}</li>`)
+        }
+
+        if (house.bills.length) {
+            $(`#${house.uuid}`).append(`<p> - Bills - </p>`)
+        }
+
+        for ( var i = 0; i < house.bills.length; i++) {
+            let bill = house.bills[i]
+            $(`#${house.uuid}`).append(`
+            <div>
+                <p>${bill.name}</p>
+                <ul class="bill_roomates"></ul>
+            </div>`)
+        }
+
+        for ( var i = 0; i < house.bills.length; i++) {
+            let bill = house.bills[i]
+            $(`#${house.uuid} .bill_roomates`).append(`<li>${bill.roomates[i]}</li>`)
         }
     });
 }
@@ -73,23 +92,23 @@ function display_houseData() {
 
 // Roomate List Functions
 function add_roomate() {
-    var num_roomates = $("#roomates_container").data("roomates") + 1;
-    $("#roomates_container").data("roomates", num_roomates)
-    $("#roomates_container").append(`<div id="room${num_roomates}_cont"><input type="text" id="roomate${num_roomates}" placeholder="Roomate ${num_roomates}"></div>`)
+    var num_roomates = $("#house_create_form #roomates_container").data("roomates") + 1;
+    $("#house_create_form #roomates_container").data("roomates", num_roomates)
+    $("#house_create_form #roomates_container").append(`<div id="room${num_roomates}_cont"><input type="text" id="roomate${num_roomates}" placeholder="Roomate ${num_roomates}"></div>`)
 }
 
 function remove_roomate() {
-    var num_roomates = $("#roomates_container").data("roomates");
+    var num_roomates = $("#house_create_form #roomates_container").data("roomates");
     if (num_roomates <= 0) return
     $(`#room${num_roomates}_cont`).remove();
-    $("#roomates_container").data("roomates", num_roomates - 1)
+    $("#house_create_form #roomates_container").data("roomates", num_roomates - 1)
 }
 //
 
 
 // Jquery form functions
 $(function(){
-    $("#signup_form").submit(function(e){
+    $("#signup_form").submit(function(e) {
         e.preventDefault();
         var userData = new Object();
         var uuid = create_UUID();
@@ -106,13 +125,13 @@ $(function(){
         display_userData();
     })
 
-    $("#house_create_form").submit(function(e){
+    $("#house_create_form").submit(function(e) {
         e.preventDefault();
         var houseData = new Object();
 
         houseData["uuid"] = loggedinuser;
 
-        var name = $("#house_create_form #name").val();
+        var name = $("#house_create_form #hname").val();
         houseData["name"] = name;
 
         houseData["roomates"] = [];
@@ -120,6 +139,8 @@ $(function(){
         for (var i = 1; i <= num_roomates; i++) {
             houseData["roomates"][i-1] = $(`input#roomate${i}`).val();
         }
+
+        houseData["bills"] = [];
 
         if (loggedinuser) {
             userData[loggedinuser]['houseName'] = name;
@@ -134,5 +155,34 @@ $(function(){
         display_houseData();
         $("#house_create_form input").val("");
     })
+
+    $("#bill_create_form #h_uuid").change(function() {
+        var uuid = $("#bill_create_form #h_uuid").val()
+        if (houseData[uuid]) {
+            for (let i = 0; i < houseData[uuid].roomates.length; i++) {
+                var roomate_name = houseData[uuid].roomates[i];
+                $("#bill_create_form #roomates_container fieldset").append(`<input type="checkbox" name="roomate_select" value="${roomate_name}">${roomate_name}<br>`)
+            }
+        }
+    });
+
+    $("#bill_create_form").submit(function(e) {
+        e.preventDefault();
+        var billData = new Object();
+        var uuid = $("#bill_create_form #h_uuid").val();
+
+        billData["name"] = $("#bill_create_form #bname").val();
+        billData["roomates"] = [];
+        var checkboxes = document.getElementsByName("roomate_select");
+        $.each($("input[name='roomate_select']:checked"), function(){
+            billData["roomates"].push($(this).val());
+        });
+
+        $("#bill_create_form input").val("");
+        $("#bill_create_form input[type='checkbox']").remove();
+        
+        add_bill(uuid, billData);
+        display_houseData();
+    });
 })
 //
