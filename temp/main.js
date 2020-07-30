@@ -90,13 +90,13 @@ function display_houseData() {
 //
 
 // Roommate List Functions
-function add_roommate() {
+function add_roomate() {
     var num_roommates = $("#house_create_form #roommates_container").data("roommates") + 1;
     $("#house_create_form #roommates_container").data("roommates", num_roommates)
     $("#house_create_form #roommates_container").append(`<div id="roomm${num_roommates}_cont"><input type="text" id="roommate${num_roommates}" placeholder="Roommate ${num_roommates}"></div>`)
 }
 
-function remove_roommate() {
+function remove_roomate() {
     var num_roommates = $("#house_create_form #roommates_container").data("roommates");
     if (num_roommates <= 0) return;
     $(`#roomm${num_roommates}_cont`).remove();
@@ -111,6 +111,7 @@ $(function(){
 
     $("#signup_form").submit(function(e) {
         e.preventDefault();
+        console.log("wuh")
         var userData = new Object();
         var uuid = create_UUID();
         userData["uuid"] = uuid;
@@ -128,10 +129,10 @@ $(function(){
 
 
     $("#add_roommate_button").click(function(){
-        add_roommate();
+        add_roomate();
     });
     $("#remove_roommate_button").click(function(){
-        remove_roommate();
+        remove_roomate();
     });
 
     $("#house_create_form").submit(function(e) {

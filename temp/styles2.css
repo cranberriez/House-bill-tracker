@@ -1,0 +1,12 @@
+* {
+    font: inherit;
+}
+
+body {
+    font-size: 18px;
+    font-family: sans-serif;
+}
+
+h4 {
+    font-weight: bold;
+}
