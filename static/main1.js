@@ -22,6 +22,14 @@ function create_UUID() {
 
 // Userdata functions
 function add_user(user) {
+    $.ajax({
+        url: "/register",
+        data: user,
+        dataType: "json"
+    }).done(function() {
+        alert("user added")
+    });
+    
     loggedinuser = user.uuid;
     userData[user.uuid] = user;
 }
