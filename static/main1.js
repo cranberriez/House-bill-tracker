@@ -25,7 +25,8 @@ function add_user(user) {
     $.ajax({
         url: "/register",
         data: user,
-        dataType: "json"
+        dataType: "json",
+        type: "POST"
     }).done(function() {
         alert("user added")
     });
